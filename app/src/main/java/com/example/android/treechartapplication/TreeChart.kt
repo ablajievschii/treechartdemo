@@ -23,7 +23,6 @@ class TreeChart @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        // FIXME assume fixed size
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
 
@@ -61,8 +60,6 @@ class TreeChart @JvmOverloads constructor(
         data = testData
         dataMap.clear()
         removeAllViews()
-//        invalidate()
-//        requestLayout()
     }
 
     /**
@@ -81,19 +78,20 @@ class TreeChart @JvmOverloads constructor(
 
         val total = arr.sum()
         val halfSum = total / 2
+        val fraction = halfSum.toFloat() / total
         val mid = getMidPointIndex(arr, halfSum)
         val left = arr.copyOfRange(0, mid)
         val right = arr.copyOfRange(mid, arr.size)
         println("mid=$mid, arr.size=${arr.size}")
         if (width >= height) {
             // split horizontally
-            val halfWidth = (halfSum.toFloat() / total * width).toInt()
+            val halfWidth = (fraction * width).toInt()
 
             renderChildren(left, x, y, halfWidth, height)
             renderChildren(right, x + halfWidth, y, width - halfWidth, height)
         } else {
             // split vertically
-            val halfHeight = (halfSum.toFloat() / total * height).toInt()
+            val halfHeight = (fraction * height).toInt()
 
             // left -> top, right -> bottom
             renderChildren(left, x, y, width, halfHeight)
@@ -117,37 +115,44 @@ class TreeChart @JvmOverloads constructor(
     }
 
     private fun addChildren(arr: IntArray, x: Int, y: Int, width: Int, height: Int) {
-        val total = arr.sum().toFloat()
         if (width >= height) {
             // place horizontally
-            var usedWidth: Int = 0
-            arr.forEach { value ->
-                val itemWidth = (value / total * width).toInt()
-
-                val newX = x + usedWidth
-                addChild(getChildView(value), Rect(
-                    newX,
-                    y,
-                    newX + itemWidth,
-                    y + height
-                ))
-                usedWidth += itemWidth
-            }
+            addChildrenHorizontal(arr, x, y, width, height)
         } else {
             // place vertically
-            var usedHeight: Int = 0
-            arr.forEach { value ->
-                val itemHeight = (value / total * height).toInt()
+            addChildrenVertical(arr, x, y, width, height)
+        }
+    }
 
-                val newY = y + usedHeight
-                addChild(getChildView(value), Rect(
-                    x,
-                    newY,
-                    x + width,
-                    newY + itemHeight
-                ))
-                usedHeight += itemHeight
-            }
+    private fun addChildrenHorizontal(arr: IntArray, x: Int, y: Int, width: Int, height: Int) {
+        val total = arr.sum().toFloat()
+        var usedWidth: Int = 0
+        arr.forEach { value ->
+            val itemWidth = (value / total * width).toInt()
+            val newX = x + usedWidth
+            addChild(getChildView(value), Rect(
+                newX,
+                y,
+                newX + itemWidth,
+                y + height
+            ))
+            usedWidth += itemWidth
+        }
+    }
+
+    private fun addChildrenVertical(arr: IntArray, x: Int, y: Int, width: Int, height: Int) {
+        val total = arr.sum().toFloat()
+        var usedHeight: Int = 0
+        arr.forEach { value ->
+            val itemHeight = (value / total * height).toInt()
+            val newY = y + usedHeight
+            addChild(getChildView(value), Rect(
+                x,
+                newY,
+                x + width,
+                newY + itemHeight
+            ))
+            usedHeight += itemHeight
         }
     }
 

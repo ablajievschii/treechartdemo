@@ -2,6 +2,7 @@ package com.example.android.treechartapplication
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -22,7 +23,8 @@ class MainActivity : AppCompatActivity() {
                 240,
             ))
             layoutParams = LinearLayout.LayoutParams(
-                resources.getDimensionPixelSize(R.dimen.size),
+                ViewGroup.LayoutParams.MATCH_PARENT,
+//                resources.getDimensionPixelSize(R.dimen.size),
                 resources.getDimensionPixelSize(R.dimen.size)
             )
         }
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val button = Button(this).apply {
             text = "random data"
             setOnClickListener {
-                parent.setData(IntArray(10) { (Math.random() * 10 + 1).toInt() })
+                parent.setData(IntArray(6) { (Math.random() * 10 + 1).toInt() })
 //                parent.setData(testData)
             }
         }
