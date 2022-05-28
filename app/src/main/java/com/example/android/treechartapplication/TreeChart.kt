@@ -83,7 +83,7 @@ class TreeChart @JvmOverloads constructor(
         val left = arr.copyOfRange(0, mid)
         val right = arr.copyOfRange(mid, arr.size)
         println("mid=$mid, arr.size=${arr.size}")
-        if (width >= height) {
+        if (isHorizontal(width, height)) {
             // split horizontally
             val halfWidth = (fraction * width).toInt()
 
@@ -104,7 +104,7 @@ class TreeChart @JvmOverloads constructor(
         var mid = 1
         for (i in arr.indices) {
             if (summ >= halfSum) {
-                mid = i - 1
+                mid = i
                 break
             }
             summ += arr[i]
@@ -115,13 +115,17 @@ class TreeChart @JvmOverloads constructor(
     }
 
     private fun addChildren(arr: IntArray, x: Int, y: Int, width: Int, height: Int) {
-        if (width >= height) {
+        if (isHorizontal(width, height)) {
             // place horizontally
             addChildrenHorizontal(arr, x, y, width, height)
         } else {
             // place vertically
             addChildrenVertical(arr, x, y, width, height)
         }
+    }
+
+    private fun isHorizontal(width: Int, height: Int): Boolean {
+        return width >= height
     }
 
     private fun addChildrenHorizontal(arr: IntArray, x: Int, y: Int, width: Int, height: Int) {

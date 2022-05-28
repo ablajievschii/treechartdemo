@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val testData = intArrayOf(2, 3, 4)
+        val testData = intArrayOf(3, 2, 1, 1, 1, 1, 1)
         val parent = TreeChart(this).apply {
             setBackgroundColor(Color.argb(
                 255,
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val button = Button(this).apply {
             text = "random data"
             setOnClickListener {
-                parent.setData(IntArray(6) { (Math.random() * 10 + 1).toInt() })
+                parent.setData(IntArray(10) { (Math.random() * 100 + 1).toInt() })
 //                parent.setData(testData)
             }
         }
